@@ -1,0 +1,103 @@
+table {
+    border: 3px solid navy;
+    width: 50%;
+
+    text-align: center;
+}
+
+h1 {
+  color: navy;
+}
+
+.button {
+  background-color: #000000; 
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px
+}
+
+.button-navy { background-color: navy; } 
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #60bfcf;
+  }
+  
+  li {
+    float: left;
+  }
+  
+  li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+  
+  li a:hover:not(.active) {
+    background-color: rgb(226, 216, 216);
+  }
+
+  .homePic{
+    width:100%;
+    border-radius: 90%;
+    height: auto;
+    opacity: 0.8;
+  }
+
+  .backg{
+    background-color: burlywood;
+  }
+
+  .hometext{
+    font-size: 130px;
+    position: absolute;
+            top: 300px;
+            left: 150px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-style: italic;
+  }
+
+  .gfg {
+    margin: 3%;
+    position: relative;
+   
+}
+
+.navbar{
+  background-color:rgb(220, 175, 192);
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+
+.buttonsdiv{
+  color: aqua;
+  text-align: center;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  size: 20px;
+}
+
+.buttons{
+  background-color: #60bfcf; 
+  border: none;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  margin: 4px 20px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  width: 200px;
+}
+.ddd{
+  background-color: azure;
+}
