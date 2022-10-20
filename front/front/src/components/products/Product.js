@@ -1,28 +1,37 @@
 import React from 'react';
 import Axios from '../../apis/Axios';
-import {Row, Col, Button, Table, Form, Card} from 'react-bootstrap'
+import {Row, Col, Button, Table, Form, Card,Badge} from 'react-bootstrap'
+import {FaShoppingCart}from 'react-icons/fa'
 import './../index.css';
 import {withParams, withNavigation} from '../../routeconf'
 import {
     MDBCard, MDBCardImage, MDBCardBody, MDBCardTitle, MDBCardText, MDBRow, MDBCol
   } from 'mdb-react-ui-kit';
-import './product.css'
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 class Product extends React.Component{
-
     constructor(props) {
         super(props);
 
+        let params={
+            quantity: 1,
+            ordersId: 5,
+            productId: -1
+        }
+        
+
         const search = {
-           // name: "",
+            name: "",
             categoryName: ""
         }
         this.state = { 
            products: [],
             search: search,
-            categories:[]
-        }
+            categories:[],
+            params: params,
+            cart:0
     }
+}
     componentDidMount() {
         this.getProduct();
         this.getCategories();
@@ -107,6 +116,17 @@ class Product extends React.Component{
         this.setState({search})
     }
 
+    
+    onInputChang2(event) {
+        const name = event.target.name;
+        const value = event.target.value;
+    
+        let params = this.state.params;
+        params[name] = value;
+        console.log(params);
+        this.setState({ params: params });
+      }
+
     renderCategoriesInButton() {
         return this.state.categories.map((count) => {
           return (
@@ -124,13 +144,34 @@ class Product extends React.Component{
         });
       }
 
+      createOrderItem(productId) {
+        let cart2 = this.state.cart;
+        let cart = cart2 + 1;
+        this.setState({cart: cart});
+        let params = this.state.params;
+        let dto = {
+          quantity: params.quantity,
+          ordersId: params.ordersId,
+          productId: productId
+        };
+        console.log("dto: " + JSON.stringify(dto));
+        try {
+          Axios.post("/orderitem", dto).then((res) => {
+            console.log(res);
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
+
+
     renderProducts() {
         return this.state.products.map((product, index) => {
             return (
                <tr key={product.id}>
                 
                   <td>{product.name}</td>
-                  <td>{product.price}</td>
+                  <td>{product.price}.00 RSD</td>
                   <td>{product.avlbl.toString()}</td>
                   {window.localStorage['role']=='ROLE_ADMIN'?
                   [<td><Button variant="warning" onClick={() => this.goToEdit(product.id)}>Edit</Button></td>,
@@ -146,7 +187,7 @@ class Product extends React.Component{
             console.log(product)
 
             return (
-                <MDBCol class="wrapper" > 
+                <MDBCol className="wrapper" > 
                     <MDBCard className='h-100'>
                     <MDBCardImage
                         src={product.img}
@@ -154,15 +195,18 @@ class Product extends React.Component{
                         position='top'
                         class="img"
                     />
-                    <MDBCardBody>
+                    <MDBCardBody >
                         <MDBCardTitle>{product.name}</MDBCardTitle>
                         <MDBCardText class="card">
-                        CENA : {product.price} 
+                        <br/>
+                        CENA<br/> 
+                        {product.price}.00 RSD 
                         </MDBCardText>
-                        <MDBCardText>
-                        AVAILABLE:{product.avlbl.toString()}
-                        </MDBCardText>
-                        <Button class="buttonss">Add to busket</Button>
+                        {product.avlbl.toString()=="true" &&
+                        <Button className="button2s" onClick={() => this.createOrderItem(product.id)}>Add to cart</Button>}
+                        {product.avlbl.toString()=="false" &&
+                        <Button className="disabled" >Out of stock</Button>}
+                       
                     </MDBCardBody>
                     </MDBCard>
                 </MDBCol>
@@ -170,9 +214,63 @@ class Product extends React.Component{
         })
     }
 
+    createNotification = (type) => {
+        return () => {
+          // eslint-disable-next-line default-case
+          switch (type) {
+            case 'info':
+              NotificationManager.info('MUST LOGIN!');
+              break; 
+              
+          }
+        };
+      };
+    
+    renderProductForNonUser(){
+        return this.state.products.map((product, index)=>{
+            console.log(product)
+
+            return (
+                <MDBCol className="wrapper" > 
+                    <MDBCard className='h-100'>
+                    <MDBCardImage
+                        src={product.img}
+                        alt='...'
+                        position='top'
+                        class="img"
+                    />
+                    <MDBCardBody >
+                        <MDBCardTitle>{product.name}</MDBCardTitle>
+                        <MDBCardText class="card">
+                        <br/>
+                        CENA<br/> 
+                        {product.price}.00 RSD 
+                        </MDBCardText>
+                        {product.avlbl.toString()=="true" &&
+                        <Button className="button2s" onClick={this.createNotification('info')}>Add to cart
+                         <NotificationContainer/></Button>}
+                        
+                        {product.avlbl.toString()=="false" &&
+                        <Button className="disabled" >Out of stock</Button>}
+                       
+                    </MDBCardBody>
+                    </MDBCard>
+                   
+                </MDBCol>
+                
+            )
+        })
+    }
+
+    
+    
 
     goToAdd() {
         this.props.navigate('/products/add');  
+    }
+
+    goToCart(orderId){
+        this.props.navigate('/cart/' + orderId);
     }
 
     goToEdit(productId) {
@@ -180,7 +278,8 @@ class Product extends React.Component{
     }
 
     render() {
-        
+        const jwt = window.localStorage['jwt'];
+        if(jwt){
         if(window.localStorage['role']=='ROLE_ADMIN'){
         return (
             <Col>
@@ -215,7 +314,7 @@ class Product extends React.Component{
                 </Row>:null}
                 
                 <Row>
-                    <Table style={{marginTop:5}}>
+                    <Table style={{marginTop:5}} className='tablestyle'>
                         <thead>
                             <tr>
                                 
@@ -236,23 +335,42 @@ class Product extends React.Component{
         }else{
             return(
                 <>
-                
+                <div className='backimg'>
+                <div >
+                <FaShoppingCart style={{marginLeft:1020, fontSize:50}} onClick={() => this.goToCart(this.state.params.ordersId)}></FaShoppingCart>
+                <Badge>{this.state.cart}</Badge>
+                </div>
                 <div class="buttonsdiv">
                     {this.renderCategoriesInButton()}
-                </div>
-             <MDBRow className='row-cols-1 row-cols-md-4 g-4' >
+                </div >
+                 <MDBRow className='row-cols-1 row-cols-md-4 g-4' >
                     {this.renderProductForUser()}
                 </MDBRow>
-                
+                </div>
                 </>
-
             );
 
+        }
+    }
+            else{
+                return(
+                    <>
+                <div className='backimg'>
+                <div >
+                <FaShoppingCart style={{marginLeft:1020, fontSize:50}} onClick={() => this.goToCart(this.state.params.ordersId)}></FaShoppingCart>
+                <Badge>{this.state.cart}</Badge>
+                </div>
+                <div class="buttonsdiv">
+                    {this.renderCategoriesInButton()}
+                </div >
+                 <MDBRow className='row-cols-1 row-cols-md-4 g-4' >
+                    {this.renderProductForNonUser()}
+                </MDBRow>
+                </div>
+                </>
+                );
             }
         }
  }
-
-
-
 
 export default withNavigation(withParams(Product));

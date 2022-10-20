@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material/icon-button": "^14.0.0",
+    "@stripe/react-stripe-js": "^1.13.0",
+    "@stripe/stripe-js": "^1.42.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",

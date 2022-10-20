@@ -4,71 +4,63 @@ import { Route, Link, HashRouter as Router, Routes, Navigate } from 'react-route
 import { logout } from './services/auth';
 import Home from './components/Home';
 import Login from './components/authorization/Login';
-import { Badge, Button, Container, Dropdown, Nav, Navbar } from 'react-bootstrap';
+import { Badge, Button, Container, Dropdown, Nav, Navbar,CButton,CBadge, Row } from 'react-bootstrap';
 import Product from './components/products/Product';
 import AddProduct from './components/products/AddProduct';
 import {FaShoppingCart}from 'react-icons/fa'
+import Cart from './components/products/Cart';
+import EditProduct from './components/products/EditProduct';
+import Orders from './components/orders/Orders';
+import Checkout from './components/checkout/Checkout';
+import Success from './components/checkout/Success';
 
 class App extends React.Component {
 
-    //cd \......
-    //npm install
-    //npm install react-router-dom
-    //npm install axios
-    //npm install react-bootstrap
-    // npm install jwt-decode
-    //npm start
+    
 
     render(){
         
         const jwt = window.localStorage['jwt'];
-
+    
         if(jwt){
             return(
-                
                 <>
-                <Router>
+                <Router >
                     <Navbar class="navbar" >
                         <Navbar.Brand as={Link} to="/">
                             Home
                         </Navbar.Brand>
                         <Nav>
-                        <Nav.Link as={Link} to="/products">
+                        <Nav.Link style={{fontSize:20}} as={Link} to="/products">
                                 Products
                             </Nav.Link>
-                            <Button onClick={()=>logout()}>logout</Button>
                         </Nav>
+                        <Nav>
+                        <Nav.Link style={{fontSize:20}} as={Link} to="/orders">
+                                Orders
+                            </Nav.Link>
+                            <Button style={{fontSize:20}} onClick={()=>logout()} as={Link} to="/">logout</Button>
+                        </Nav>
+                      
                          
-                        <Dropdown style={{marginLeft:1020}}>
-                                <Dropdown.Toggle variant="success">
-                                <FaShoppingCart color="white" fontSiye="25px"/>
-                                    <Badge>{10}</Badge>
-                                </Dropdown.Toggle>
-                            <Dropdown.Menu style={{minwidth: 370}}>
-                            <span style={{padding:10}}> style</span>
-                            </Dropdown.Menu>
-                            </Dropdown>
                     </Navbar>
                     <Container style={{paddingTop:"10px"}}>
                         <Routes>
                             <Route path="/" element={<Home/>}/>
                             <Route path="/products" element={<Product/>}/> 
                             <Route path="/products/add" element={<AddProduct/>}/> 
-                            {/* <Route path="/putanja_neka" element={<PutanjaNeka/>}/> */}
-                            {/* {<PutanjaNeka/>} se menja, izbacice gresku ako se ovako pokrene 
-                            cd \......
-                            npm install
-                            npm install react-router-dom
-                            npm install axios
-                            npm install react-bootstrap
-                            npm install jwt-decode
-                            npm start
-                            */}
+                            <Route path="/products/edit/:id" element={<EditProduct/>}/> 
+                            <Route path="/cart/:id" element={<Cart/>}/>
+                            <Route path="/orders" element={<Orders/>}/>
+                            <Route path="/checkout/:id" element = {<Checkout/>}/>
+                            <Route path="/success" element={<Success/>}/>
+                            <Route path="/cart/:id" element={<Cart/>}/>
+                            <Route path="/cart" element={<Cart/>}/>
                             <Route path="/login" element={<Login/>}/>
                         </Routes>
                     </Container>
                 </Router>
-
+             
                 </>
         );  
         }else{
@@ -76,14 +68,14 @@ class App extends React.Component {
                 <>
                 <Router>
                     <Navbar class="navbar" >
-                        <Navbar.Brand as={Link} to="/">
+                        <Navbar.Brand as={Link} to="/" style={{fontSize:20}}>
                         Home
                         </Navbar.Brand>
                         <Nav>
-                            <Nav.Link as={Link} to="/putanja_neka">
-                                Signup
+                            <Nav.Link as={Link} to="/products" style={{fontSize:20}}>
+                                Products
                             </Nav.Link>
-                            <Nav.Link as={Link} to="/login">
+                            <Nav.Link as={Link} to="/login" style={{fontSize:20}}>
                             Login
                             </Nav.Link>
                            
@@ -92,16 +84,7 @@ class App extends React.Component {
                     <Container style={{paddingTop:"10px"}}>
                         <Routes>
                             <Route path='/' element={<Home/>}/>
-                            {/* <Route path="/putanja_neka" element={<PutanjaNeka/>}/> */}
-                            {/* {<PutanjaNeka/>} se menja, izbacice gresku ako se ovako pokrene 
-                            cd \......
-                            npm install
-                            npm install react-router-dom
-                            npm install axios
-                            npm install react-bootstrap
-                            npm install jwt-decode
-                            npm start
-                            */}
+                            <Route path="/products" element={<Product/>}/>
                             <Route path="/login" element={<Login/>}/>
                         </Routes>
                     </Container>
@@ -109,12 +92,13 @@ class App extends React.Component {
 
                 </>
             );
-        }
-        
+        }  
     }
 }
-
+    
 ReactDOM.render(
-    <App/>,
+    
+        <App/>,
+   
     document.querySelector('#root')
 );

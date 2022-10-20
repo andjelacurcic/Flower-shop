@@ -13,6 +13,8 @@ export const login = async function(username, password){
         console.log(decoded.role.authority)
         window.localStorage.setItem('role', decoded.role.authority);
         window.localStorage.setItem('jwt',ret.data);
+        window.localStorage.setItem('username',username);
+        window.localStorage.setItem('cart',0);
         window.location.reload();
     }catch(err){
         console.log(err);
@@ -23,5 +25,6 @@ export const login = async function(username, password){
 export const logout = async function(){
     window.localStorage.removeItem('role');
     window.localStorage.removeItem('jwt');
+    window.localStorage.removeItem('username');
     window.location.reload();
 }

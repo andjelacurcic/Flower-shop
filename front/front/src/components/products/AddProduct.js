@@ -2,7 +2,7 @@ import React  from "react";
 import { withNavigation } from "../../routeconf";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import Axios from '../../apis/Axios';
-
+import './../index.css';
 
 class AddProduct extends React.Component{
 
@@ -13,6 +13,7 @@ class AddProduct extends React.Component{
             name: "",
             price: "",
             avlbl: true,
+            img: "",
             categoryId: "",
         };
         this.state={  params: params, categories: [] };
@@ -60,6 +61,7 @@ class AddProduct extends React.Component{
           name: params.name,
           price: params.price,
           avlbl: params.avlbl,
+          img: params.img,
           categoryId: params.categoryId,
         };
         console.log("dto: " + JSON.stringify(dto));
@@ -77,16 +79,16 @@ class AddProduct extends React.Component{
         return (
             <>
               <div>
-                <Form style={{ width: "100%" }}>
-                  <Row>
+                <Form className='formstyle'>
+                  <Row >
                     <Col>
                       <Form.Group>
-                        <Form.Label>Naziv proizvoda</Form.Label>
+                        <Form.Label>Name</Form.Label>
                         <Form.Control
                           name="name"
                           as="input"
                           type="text"
-                          placeholder="Unesi naziv"
+                          placeholder="mandatory"
                           onChange={(e) => this.onInputChange(e)}
                         ></Form.Control>
                       </Form.Group>
@@ -96,10 +98,37 @@ class AddProduct extends React.Component{
                   <Row>
                     <Col>
                       <Form.Group>
-                        <Form.Label>Cena</Form.Label>
+                        <Form.Label>Price</Form.Label>
                         <Form.Control
                         name="price"
                           type="number"
+                          as="input"
+                          placeholder="mandatory"
+                          onChange={(e) => this.onInputChange(e)}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col >
+                      <Form.Group>
+                        <Form.Label>Available</Form.Label>
+                        <Form.Control
+                          name="avlbl"
+                          as="input"
+                          placeholder="mandatory"
+                          onChange={(e) => this.onInputChange(e)}
+                        ></Form.Control>
+                      </Form.Group>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Group>
+                        <Form.Label>Img</Form.Label>
+                        <Form.Control
+                        name="img"
+                          type="text"
                           as="input"
                           
                           onChange={(e) => this.onInputChange(e)}
@@ -110,25 +139,12 @@ class AddProduct extends React.Component{
                   <Row>
                     <Col>
                       <Form.Group>
-                        <Form.Label>Dostupnost</Form.Label>
-                        <Form.Control
-                          name="avlbl"
-                          as="input"
-                         
-                          onChange={(e) => this.onInputChange(e)}
-                        ></Form.Control>
-                      </Form.Group>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Group>
-                        <Form.Label>Drzava takmicara</Form.Label>
+                        <Form.Label >Category</Form.Label>
                         <Form.Select
                           name="categoryId"
                           onChange={(e) => this.onInputChange(e)}
                         >
-                          <option>Izaberi kateogoriju</option>
+                          <option>Choose category</option>
                           {this.renderCategoriesInDropDown()}
                         </Form.Select>
                       </Form.Group>
@@ -139,7 +155,7 @@ class AddProduct extends React.Component{
                 <Row>
                   <Col>
                     <Button onClick={(e) => this.createProduct(e)}>
-                      Dodaj takmicara
+                      Add product
                     </Button>
                   </Col>
                 </Row>
